@@ -225,7 +225,16 @@ class TestTrainingRunExecution:
     @pytest.mark.asyncio
     async def test_execute_with_stop(self):
         run = TrainingRun()
-        backend = MockBackend()
+
+        class SlowBackend(MockBackend):
+            async def run(self, context):
+                for event in self.events:
+                    await asyncio.sleep(0.01)
+                    if context.should_stop():
+                        break
+                    yield event
+
+        backend = SlowBackend()
 
         async def delayed_stop():
             await asyncio.sleep(0.01)

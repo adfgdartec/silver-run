@@ -36,9 +36,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/adfgdartec/silver.sv"
-Repository = "https://github.com/adfgdartec/silver.sv"
-Issues = "https://github.com/adfgdartec/silver.sv/issues"
+Homepage = "https://github.com/adfgdartec/silver-run"
+Repository = "https://github.com/adfgdartec/silver-run"
+Issues = "https://github.com/adfgdartec/silver-run/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

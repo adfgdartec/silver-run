@@ -8,6 +8,9 @@ from .models import (
     TrainingRunOptions,
 )
 from .training import TrainingRun
+from .resources import GPUAllocation, GPUDevice, GPUResourceScheduler, ResourcePlan, TaskResourceRequest
+
+__version__ = "0.3.0"
 
 __all__ = [
     "RunState",
@@ -19,4 +22,5 @@ __all__ = [
     "TrainingContext",
     "TrainingRunOptions",
     "TrainingRun",
+    "GPUDevice", "TaskResourceRequest", "GPUAllocation", "ResourcePlan", "GPUResourceScheduler",
 ]

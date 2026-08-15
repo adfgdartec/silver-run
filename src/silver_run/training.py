@@ -1,6 +1,7 @@
 import asyncio
 import time
-from typing import Any, List, Optional
+import json
+from typing import Any, Callable, Dict, List, Optional
 
 from .backend import TrainingBackend
 from .checkpoints import MemoryCheckpointStore
@@ -16,16 +17,44 @@ class TrainingRun:
         )
         self._clock = options.clock if options and options.clock else time.time
         self._checkpoint_number = 0
+        self._subscribers: List[Callable[[RunEvent], None]] = []
+
+    def subscribe(self, callback: Callable[[RunEvent], None]) -> Callable[[], None]:
+        """Subscribe to emitted events and return an unsubscribe function."""
+        self._subscribers.append(callback)
+        def unsubscribe() -> None:
+            if callback in self._subscribers:
+                self._subscribers.remove(callback)
+        return unsubscribe
+
+    def summary(self) -> Dict[str, Any]:
+        """Return a compact, serializable run summary for dashboards."""
+        return {"state": self.state.value, "events": len(self._event_log),
+                "checkpoints": self._checkpoint_number,
+                "last_event": self._event_log[-1].kind if self._event_log else None}
 
     @property
     def state(self) -> RunState:
         return self._current_state
 
-    def events(self) -> List[RunEvent]:
-        return [
+    def events(self, kind: Optional[str] = None) -> List[RunEvent]:
+        events = [
             RunEvent(kind=event.kind, timestamp=event.timestamp, data=dict(event.data))
             for event in self._event_log
         ]
+        return [event for event in events if kind is None or event.kind == kind]
+
+    @property
+    def duration(self) -> Optional[float]:
+        if len(self._event_log) < 2:
+            return None
+        return max(0.0, self._event_log[-1].timestamp - self._event_log[0].timestamp)
+
+    def to_json(self) -> str:
+        return json.dumps({"summary": self.summary(), "events": [
+            {"kind": event.kind, "timestamp": event.timestamp, "data": event.data}
+            for event in self._event_log
+        ]}, sort_keys=True)
 
     def start(self) -> None:
         if self._current_state not in [RunState.CREATED, RunState.PAUSED]:
@@ -82,6 +111,8 @@ class TrainingRun:
             data={key: value for key, value in event_data.items() if key != "kind"},
         )
         self._event_log.append(event)
+        for subscriber in tuple(self._subscribers):
+            subscriber(event)
         if self._current_state == RunState.CREATED and event.kind != "run_started":
             self._current_state = RunState.RUNNING
         return event

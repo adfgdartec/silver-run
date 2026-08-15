@@ -9,6 +9,8 @@ from .models import (
 )
 from .training import TrainingRun
 
+__version__ = "0.2.0"
+
 __all__ = [
     "RunState",
     "RunEvent",

@@ -1,6 +1,6 @@
 import asyncio
 import time
-from typing import Any, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from .backend import TrainingBackend
 from .checkpoints import MemoryCheckpointStore
@@ -16,6 +16,21 @@ class TrainingRun:
         )
         self._clock = options.clock if options and options.clock else time.time
         self._checkpoint_number = 0
+        self._subscribers: List[Callable[[RunEvent], None]] = []
+
+    def subscribe(self, callback: Callable[[RunEvent], None]) -> Callable[[], None]:
+        """Subscribe to emitted events and return an unsubscribe function."""
+        self._subscribers.append(callback)
+        def unsubscribe() -> None:
+            if callback in self._subscribers:
+                self._subscribers.remove(callback)
+        return unsubscribe
+
+    def summary(self) -> Dict[str, Any]:
+        """Return a compact, serializable run summary for dashboards."""
+        return {"state": self.state.value, "events": len(self._event_log),
+                "checkpoints": self._checkpoint_number,
+                "last_event": self._event_log[-1].kind if self._event_log else None}
 
     @property
     def state(self) -> RunState:
@@ -82,6 +97,8 @@ class TrainingRun:
             data={key: value for key, value in event_data.items() if key != "kind"},
         )
         self._event_log.append(event)
+        for subscriber in tuple(self._subscribers):
+            subscriber(event)
         if self._current_state == RunState.CREATED and event.kind != "run_started":
             self._current_state = RunState.RUNNING
         return event

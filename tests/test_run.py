@@ -151,6 +151,16 @@ class TestTrainingRunLifecycle:
 
 
 class TestTrainingRunEvents:
+    def test_subscriber_receives_events_and_can_unsubscribe(self):
+        run = TrainingRun()
+        received = []
+        unsubscribe = run.subscribe(received.append)
+        run.start()
+        unsubscribe()
+        run.complete()
+        assert [event.kind for event in received] == ["run_started"]
+        assert run.summary()["state"] == "completed"
+
     def test_events_returns_copy(self):
         run = TrainingRun()
         run.start()

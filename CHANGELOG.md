@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added event subscriptions for live dashboards and a serializable run `summary()`.
 - Added event filtering, duration tracking, and JSON run export.
+- Added explicit GPU percentage/memory requests and balanced multi-GPU resource plans.
 
 ## [0.1.0] - 2024-08-04
 

@@ -151,6 +151,14 @@ class TestTrainingRunLifecycle:
 
 
 class TestTrainingRunEvents:
+    def test_event_filter_duration_and_json(self):
+        run = TrainingRun(TrainingRunOptions(clock=iter([1.0, 2.0]).__next__))
+        run.start()
+        run.complete()
+        assert len(run.events("run_started")) == 1
+        assert run.duration == 1.0
+        assert '"events"' in run.to_json()
+
     def test_subscriber_receives_events_and_can_unsubscribe(self):
         run = TrainingRun()
         received = []

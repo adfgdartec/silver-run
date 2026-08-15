@@ -1,5 +1,6 @@
 import asyncio
 import time
+import json
 from typing import Any, Callable, Dict, List, Optional
 
 from .backend import TrainingBackend
@@ -36,11 +37,24 @@ class TrainingRun:
     def state(self) -> RunState:
         return self._current_state
 
-    def events(self) -> List[RunEvent]:
-        return [
+    def events(self, kind: Optional[str] = None) -> List[RunEvent]:
+        events = [
             RunEvent(kind=event.kind, timestamp=event.timestamp, data=dict(event.data))
             for event in self._event_log
         ]
+        return [event for event in events if kind is None or event.kind == kind]
+
+    @property
+    def duration(self) -> Optional[float]:
+        if len(self._event_log) < 2:
+            return None
+        return max(0.0, self._event_log[-1].timestamp - self._event_log[0].timestamp)
+
+    def to_json(self) -> str:
+        return json.dumps({"summary": self.summary(), "events": [
+            {"kind": event.kind, "timestamp": event.timestamp, "data": event.data}
+            for event in self._event_log
+        ]}, sort_keys=True)
 
     def start(self) -> None:
         if self._current_state not in [RunState.CREATED, RunState.PAUSED]:

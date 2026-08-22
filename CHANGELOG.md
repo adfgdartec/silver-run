@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-08-22
+
+### Fixed
+- Restored the default in-memory checkpoint store when an options object does not
+  provide a custom store.
+- Restored Python 3.8 import compatibility in the event-emission annotation.
+
+### Added
+- Hardened CI and releases with supported-Python testing and tag/version checks.
+
 ## [0.3.0] - 2026-08-15
 
 ### Changed

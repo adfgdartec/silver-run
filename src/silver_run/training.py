@@ -13,7 +13,9 @@ class TrainingRun:
         self._current_state = RunState.CREATED
         self._event_log: List[RunEvent] = []
         self._checkpoint_store = (
-            options.checkpoint_store if options else MemoryCheckpointStore()
+            options.checkpoint_store
+            if options and options.checkpoint_store is not None
+            else MemoryCheckpointStore()
         )
         self._clock = options.clock if options and options.clock else time.time
         self._checkpoint_number = 0
@@ -104,7 +106,7 @@ class TrainingRun:
         self._current_state = RunState.FAILED
         self._emit({"kind": "run_failed", "error": str(error)})
 
-    def _emit(self, event_data: dict[str, Any]) -> RunEvent:
+    def _emit(self, event_data: Dict[str, Any]) -> RunEvent:
         event = RunEvent(
             kind=event_data["kind"],
             timestamp=self._clock(),

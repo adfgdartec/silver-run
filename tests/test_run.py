@@ -185,6 +185,12 @@ class TestTrainingRunEvents:
 
 class TestTrainingRunCheckpoints:
     @pytest.mark.asyncio
+    async def test_options_without_store_use_default_memory_store(self):
+        run = TrainingRun(TrainingRunOptions())
+        checkpoint = await run.checkpoint({"step": 1})
+        assert await run.latest_checkpoint() == checkpoint
+
+    @pytest.mark.asyncio
     async def test_checkpoint(self):
         run = TrainingRun()
         checkpoint = await run.checkpoint({"model": "state"})

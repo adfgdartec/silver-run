@@ -10,7 +10,7 @@ from .models import (
 from .training import TrainingRun
 from .resources import GPUAllocation, GPUDevice, GPUResourceScheduler, ResourcePlan, TaskResourceRequest
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "RunState",

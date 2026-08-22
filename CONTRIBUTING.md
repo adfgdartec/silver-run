@@ -5,7 +5,7 @@ Thank you for your interest in contributing to silver-run! This document provide
 ## Development Setup
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.10 or higher
 - Git
 - Virtual environment (recommended)
 

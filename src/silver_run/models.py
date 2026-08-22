@@ -38,3 +38,6 @@ class TrainingContext:
 class TrainingRunOptions:
     checkpoint_store: Optional[Any] = None
     clock: Optional[Callable[[], float]] = None
+    run_id: Optional[str] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    run_store: Optional[Any] = None

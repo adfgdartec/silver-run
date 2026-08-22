@@ -1,6 +1,7 @@
 import asyncio
 import time
 import json
+import uuid
 from typing import Any, Callable, Dict, List, Optional
 
 from .backend import TrainingBackend
@@ -10,16 +11,30 @@ from .models import Checkpoint, RunEvent, RunState, TrainingContext, TrainingRun
 
 class TrainingRun:
     def __init__(self, options: Optional[TrainingRunOptions] = None):
+        options = options or TrainingRunOptions()
         self._current_state = RunState.CREATED
         self._event_log: List[RunEvent] = []
         self._checkpoint_store = (
             options.checkpoint_store
-            if options and options.checkpoint_store is not None
+            if options.checkpoint_store is not None
             else MemoryCheckpointStore()
         )
-        self._clock = options.clock if options and options.clock else time.time
+        self._clock = options.clock or time.time
         self._checkpoint_number = 0
         self._subscribers: List[Callable[[RunEvent], None]] = []
+        self._id = options.run_id or ("run-" + uuid.uuid4().hex[:12])
+        self._metadata = dict(options.metadata)
+        self._run_store = options.run_store
+        if self._run_store is not None:
+            self._run_store.start(self._id, self._metadata)
+
+    @property
+    def id(self) -> str:
+        return self._id
+
+    @property
+    def metadata(self) -> Dict[str, Any]:
+        return dict(self._metadata)
 
     def subscribe(self, callback: Callable[[RunEvent], None]) -> Callable[[], None]:
         """Subscribe to emitted events and return an unsubscribe function."""
@@ -31,9 +46,10 @@ class TrainingRun:
 
     def summary(self) -> Dict[str, Any]:
         """Return a compact, serializable run summary for dashboards."""
-        return {"state": self.state.value, "events": len(self._event_log),
+        return {"id": self.id, "state": self.state.value, "events": len(self._event_log),
                 "checkpoints": self._checkpoint_number,
-                "last_event": self._event_log[-1].kind if self._event_log else None}
+                "last_event": self._event_log[-1].kind if self._event_log else None,
+                "metadata": self.metadata}
 
     @property
     def state(self) -> RunState:
@@ -45,6 +61,14 @@ class TrainingRun:
             for event in self._event_log
         ]
         return [event for event in events if kind is None or event.kind == kind]
+
+    def emit(self, kind: str, data: Optional[Dict[str, Any]] = None) -> RunEvent:
+        """Emit a validated custom event from an external training loop."""
+        if not isinstance(kind, str) or not kind.strip():
+            raise ValueError("event kind must be a non-empty string")
+        payload = dict(data or {})
+        payload["kind"] = kind
+        return self._emit(payload)
 
     @property
     def duration(self) -> Optional[float]:
@@ -113,10 +137,12 @@ class TrainingRun:
             data={key: value for key, value in event_data.items() if key != "kind"},
         )
         self._event_log.append(event)
-        for subscriber in tuple(self._subscribers):
-            subscriber(event)
         if self._current_state == RunState.CREATED and event.kind != "run_started":
             self._current_state = RunState.RUNNING
+        if self._run_store is not None:
+            self._run_store.append(self._id, event, self._current_state.value)
+        for subscriber in tuple(self._subscribers):
+            subscriber(event)
         return event
 
     async def checkpoint(self, payload: Any, id: Optional[str] = None) -> Checkpoint:

@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "silver-run"
-version = "0.4.0"
+version = "1.0.0"
 description = "Backend-neutral ML run lifecycle, events, and checkpoints for Silver."
 readme = "README.md"
 requires-python = ">=3.8"
 license = "Apache-2.0"
-authors = []
+authors = [{name = "Silver Contributors"}]
 keywords = ["machine-learning", "training", "checkpoint", "experiments", "python"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
@@ -21,6 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
@@ -33,6 +34,7 @@ dev = [
     "mypy>=1.0.0",
     "build>=0.10.0",
     "twine>=4.0.0",
+    "ruff>=0.8.0",
 ]
 
 [project.urls]
@@ -45,3 +47,6 @@ where = ["src"]
 
 [tool.setuptools.package-dir]
 "" = "src"
+
+[tool.setuptools.package-data]
+silver_run = ["py.typed"]

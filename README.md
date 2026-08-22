@@ -1,8 +1,12 @@
 # silver-run
 
+<p align="center"><img src="https://raw.githubusercontent.com/adfgdartec/silver-run/main/docs/assets/silver-hero.png" alt="Silver local experiment tracking" width="100%"></p>
+
+**Local experiment tracking that is transparent enough to debug with a text editor.**
+
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
+[![CI](https://github.com/adfgdartec/silver-run/actions/workflows/ci.yml/badge.svg)](https://github.com/adfgdartec/silver-run/actions/workflows/ci.yml)
 [![Code Style](https://img.shields.io/badge/code%20style-flake8-blue.svg)](https://flake8.pycqa.org/)
 
 Backend-neutral ML run lifecycle, events, and checkpoints for Silver. A Python package designed for ML researchers who need flexible training orchestration across different frameworks.
@@ -14,6 +18,31 @@ pip install silver-run
 ```
 
 ## Quick Start
+
+### Durable tracking without a server
+
+```python
+from silver_run import (
+    FileCheckpointStore, LocalRunStore, TrainingRun, TrainingRunOptions,
+)
+
+store = LocalRunStore(".silver/runs")
+run = TrainingRun(TrainingRunOptions(
+    metadata={"model": "tabular-v1", "dataset": "customers-2026"},
+    run_store=store,
+    checkpoint_store=FileCheckpointStore(".silver/checkpoints"),
+))
+
+run.start()
+run.emit("epoch", {"epoch": 1, "metrics": {"loss": 0.42}})
+run.complete()
+
+restored = store.load(run.id)
+print(restored.state, restored.metrics, restored.duration)
+```
+
+Run manifests are atomic JSON; events are append-only JSONL; checkpoint IDs are
+path-safe; checkpoint payloads are explicit JSON instead of unsafe pickle.
 
 ```python
 from silver_run import TrainingRun, TrainingBackend, TrainingContext

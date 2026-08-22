@@ -8,7 +8,6 @@ from silver_run import (
     RunState,
     RunEvent,
     Checkpoint,
-    CheckpointStore,
     MemoryCheckpointStore,
 )
 
@@ -42,7 +41,8 @@ class TestTrainingRunCreation:
         assert run.state == RunState.CREATED
 
     def test_custom_clock(self):
-        custom_time = lambda: 1000.0
+        def custom_time():
+            return 1000.0
         run = TrainingRun(TrainingRunOptions(clock=custom_time))
         run.start()
         assert run.events()[0].timestamp == 1000.0
@@ -151,6 +151,14 @@ class TestTrainingRunLifecycle:
 
 
 class TestTrainingRunEvents:
+    def test_public_emit_records_custom_events(self):
+        run = TrainingRun()
+        event = run.emit("metric", {"loss": 0.5, "kind": "spoofed"})
+        assert event.kind == "metric"
+        assert event.data == {"loss": 0.5}
+        with pytest.raises(ValueError, match="kind"):
+            run.emit("")
+
     def test_event_filter_duration_and_json(self):
         run = TrainingRun(TrainingRunOptions(clock=iter([1.0, 2.0]).__next__))
         run.start()

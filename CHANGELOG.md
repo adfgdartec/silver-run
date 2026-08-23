@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 - 2026-08-23
+
+- Coordinated release for the Silver experiment workbench and report comparison APIs.
+
 ## 1.3.0 - 2026-08-23
 
 - Coordinated ecosystem release for validated, decision-ready experiment artifacts.

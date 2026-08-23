@@ -329,3 +329,10 @@ Apache-2.0 - see [LICENSE](LICENSE) file for details.
 - [silver-data](https://github.com/adfgdartec/silver-data) - Dataset handling
 - [silver-diagnostics](https://github.com/adfgdartec/silver-diagnostics) - ML diagnostics
 - [silver-adapters](https://github.com/adfgdartec/silver-adapters) - Framework adapters
+
+## Evidence you can replay
+
+Run timelines and checkpoints are durable evidence for the decision loop:
+persist the SVG returned by `store.visualize(...)`, apply one recommended
+change, and compare the next run's metrics and events. This keeps debugging
+reproducible instead of relying on screenshots or memory.

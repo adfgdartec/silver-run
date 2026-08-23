@@ -7,7 +7,7 @@ stored = store.load(run.id)
 open("run-timeline.svg", "w", encoding="utf-8").write(stored.to_svg())
 
 # Or render directly from the store:
-store.visualize(run.id, "run-timeline.svg")
+open("run-timeline.svg", "w", encoding="utf-8").write(store.visualize(run.id))
 ```
 
 The SVG lays lifecycle events on their real timestamps and plots loss and

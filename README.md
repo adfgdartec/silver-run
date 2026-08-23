@@ -19,7 +19,8 @@ Backend-neutral ML run lifecycle, events, and checkpoints for Silver. A Python p
 restored = store.load(run.id)
 open("run-timeline.svg", "w", encoding="utf-8").write(restored.to_svg())
 
-# Or: store.visualize(run.id, "run-timeline.svg")
+# Or render from the store and save the returned SVG text:
+open("run-timeline.svg", "w", encoding="utf-8").write(store.visualize(run.id))
 ```
 
 The timeline uses persisted event timestamps and recorded loss curves, so it is

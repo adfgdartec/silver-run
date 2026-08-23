@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0 - 2026-08-23
+
+- Coordinated ecosystem release for validated, decision-ready experiment artifacts.
+
 ## 1.2.0 - 2026-08-23
 
 - Added documented replay/verification workflow for timeline and checkpoint evidence in decision plans.

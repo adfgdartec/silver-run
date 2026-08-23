@@ -10,8 +10,9 @@ from .models import (
 from .training import TrainingRun
 from .resources import GPUAllocation, GPUDevice, GPUResourceScheduler, ResourcePlan, TaskResourceRequest
 from .storage import FileCheckpointStore, LocalRunStore, StoredRun
+from .visualization import run_timeline_svg
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 __all__ = [
     "RunState",
@@ -24,5 +25,5 @@ __all__ = [
     "TrainingRunOptions",
     "TrainingRun",
     "GPUDevice", "TaskResourceRequest", "GPUAllocation", "ResourcePlan", "GPUResourceScheduler",
-    "FileCheckpointStore", "LocalRunStore", "StoredRun",
+    "FileCheckpointStore", "LocalRunStore", "StoredRun", "run_timeline_svg",
 ]

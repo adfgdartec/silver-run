@@ -4,12 +4,26 @@
 
 **Local experiment tracking that is transparent enough to debug with a text editor.**
 
-[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
 [![CI](https://github.com/adfgdartec/silver-run/actions/workflows/ci.yml/badge.svg)](https://github.com/adfgdartec/silver-run/actions/workflows/ci.yml)
 [![Code Style](https://img.shields.io/badge/code%20style-flake8-blue.svg)](https://flake8.pycqa.org/)
 
 Backend-neutral ML run lifecycle, events, and checkpoints for Silver. A Python package designed for ML researchers who need flexible training orchestration across different frameworks.
+
+## Replay the experiment visually
+
+<p align="center"><img src="https://raw.githubusercontent.com/adfgdartec/silver-run/main/docs/assets/neural-network-inspection.png" alt="Neural-network inputs, hidden layers, activations, gradients, prediction, and training health" width="100%"></p>
+
+```python
+restored = store.load(run.id)
+open("run-timeline.svg", "w", encoding="utf-8").write(restored.to_svg())
+
+# Or: store.visualize(run.id, "run-timeline.svg")
+```
+
+The timeline uses persisted event timestamps and recorded loss curves, so it is
+replayable after the process exits. See the [visual evidence model](docs/neural-visual-inspection.md).
 
 ## Installation
 

@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "silver-run"
-version = "1.0.0"
-description = "Backend-neutral ML run lifecycle, events, and checkpoints for Silver."
+version = "1.1.0"
+description = "Backend-neutral ML run lifecycle, checkpoints, and visual experiment timelines for Silver."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 authors = [{name = "Silver Contributors"}]
-keywords = ["machine-learning", "training", "checkpoint", "experiments", "python"]
+keywords = ["machine-learning", "training", "checkpoint", "experiments", "visualization", "python"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",

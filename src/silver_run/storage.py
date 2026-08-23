@@ -110,6 +110,12 @@ class StoredRun:
             ],
         }
 
+    def to_svg(self, *, title: str = "Training run timeline") -> str:
+        """Render this replayable run as a self-contained SVG timeline."""
+        from .visualization import run_timeline_svg
+
+        return run_timeline_svg(self, title=title)
+
 
 class LocalRunStore:
     """A transparent local experiment tracker backed by JSON and JSONL files."""
@@ -190,3 +196,6 @@ class LocalRunStore:
             if path.is_dir() and (path / "run.json").exists():
                 values.append(self.load(path.name))
         return tuple(sorted(values, key=lambda item: item.id))
+
+    def visualize(self, run_id: str, *, title: str = "Training run timeline") -> str:
+        return self.load(run_id).to_svg(title=title)

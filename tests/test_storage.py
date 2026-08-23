@@ -64,3 +64,20 @@ def test_run_store_rejects_duplicate_and_unsafe_run_ids(tmp_path):
         TrainingRun(TrainingRunOptions(run_id="safe-run", run_store=store))
     with pytest.raises(ValueError, match="run id"):
         TrainingRun(TrainingRunOptions(run_id="../escape", run_store=store))
+
+
+def test_stored_run_renders_actual_events_and_metrics_as_svg(tmp_path):
+    store = LocalRunStore(str(tmp_path / "runs"))
+    run = TrainingRun(TrainingRunOptions(run_id="visual-run", run_store=store))
+    run.start()
+    run.emit("epoch", {"epoch": 1, "metrics": {"loss": 1.0, "val_loss": 1.2}})
+    run.emit("epoch", {"epoch": 2, "metrics": {"loss": 0.4, "val_loss": 0.5}})
+    run.complete()
+
+    restored = store.load(run.id)
+    svg = restored.to_svg()
+    assert svg.startswith("<svg")
+    assert "visual-run" in svg
+    assert "METRIC HISTORY · 2 epochs" in svg
+    assert "run_completed" in svg
+    assert store.visualize(run.id) == svg

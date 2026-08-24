@@ -5,11 +5,17 @@
 **Local experiment tracking that is transparent enough to debug with a text editor.**
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://github.com/adfgdartec/silver-run/blob/main/LICENSE)
 [![CI](https://github.com/adfgdartec/silver-run/actions/workflows/ci.yml/badge.svg)](https://github.com/adfgdartec/silver-run/actions/workflows/ci.yml)
 [![Code Style](https://img.shields.io/badge/code%20style-flake8-blue.svg)](https://flake8.pycqa.org/)
 
 Backend-neutral ML run lifecycle, events, and checkpoints for Silver. A Python package designed for ML researchers who need flexible training orchestration across different frameworks.
+
+### vs. MLflow and W&B
+
+Silver gives up hosted dashboards, team collaboration UI, and managed artifact
+storage. In exchange, runs are local JSON/JSONL you can inspect with `cat` or
+`jq`, replay without a server, and keep without vendor lock-in.
 
 ## Replay the experiment visually
 
@@ -24,7 +30,7 @@ open("run-timeline.svg", "w", encoding="utf-8").write(store.visualize(run.id))
 ```
 
 The timeline uses persisted event timestamps and recorded loss curves, so it is
-replayable after the process exits. See the [visual evidence model](docs/neural-visual-inspection.md).
+replayable after the process exits. See the [visual evidence model](https://github.com/adfgdartec/silver-run/blob/main/docs/neural-visual-inspection.md).
 
 ## Installation
 
@@ -318,11 +324,11 @@ mypy src/
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/adfgdartec/silver-run/blob/main/CONTRIBUTING.md) for guidelines.
 
 ## License
 
-Apache-2.0 - see [LICENSE](LICENSE) file for details.
+Apache-2.0 - see [LICENSE](https://github.com/adfgdartec/silver-run/blob/main/LICENSE) file for details.
 
 ## Related Packages
 

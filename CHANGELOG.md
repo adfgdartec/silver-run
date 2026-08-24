@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 - 2026-08-24
+
+- Packaging/trust cleanup: PyPI-safe links, Beta metadata, lean sdists, and honest tracker tradeoffs.
+
 ## 1.4.0 - 2026-08-23
 
 - Coordinated release for the Silver experiment workbench and report comparison APIs.

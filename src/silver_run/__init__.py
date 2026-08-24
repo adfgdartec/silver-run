@@ -12,7 +12,7 @@ from .resources import GPUAllocation, GPUDevice, GPUResourceScheduler, ResourceP
 from .storage import FileCheckpointStore, LocalRunStore, StoredRun
 from .visualization import run_timeline_svg
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 
 __all__ = [
     "RunState",

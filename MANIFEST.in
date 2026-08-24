@@ -7,11 +7,11 @@ include CODE_OF_CONDUCT.md
 recursive-include src *.py
 recursive-include tests *.py
 recursive-include docs *.md *.png
-global-exclude dist/*
-global-exclude *.egg-info/*
-global-exclude .git/*
-global-exclude .pytest_cache/*
-global-exclude .mypy_cache/*
-global-exclude .ruff_cache/*
-global-exclude __pycache__/*
+prune dist
+prune src/silver_run.egg-info
+prune .git
+prune .pytest_cache
+prune .mypy_cache
+prune .ruff_cache
+prune __pycache__
 global-exclude *.py[cod]

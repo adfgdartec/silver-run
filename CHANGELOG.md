@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1 - 2026-08-24
+
+- Corrected sdist pruning to exclude build artifacts and repository metadata.
+
 ## 1.5.0 - 2026-08-24
 
 - Packaging/trust cleanup: PyPI-safe links, Beta metadata, lean sdists, and honest tracker tradeoffs.
